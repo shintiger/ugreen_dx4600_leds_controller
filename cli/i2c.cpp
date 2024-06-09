@@ -15,7 +15,7 @@ i2c_device_t::~i2c_device_t() {
 
 int i2c_device_t::start(const char *filename, uint16_t addr) {
     _fd = open(filename, O_RDWR);
-
+    std::cerr << _fd << std::endl;
     if (_fd < 0) {
         int rc = _fd;
         _fd = 0;
@@ -23,6 +23,7 @@ int i2c_device_t::start(const char *filename, uint16_t addr) {
     }
 
     int rc = ioctl(_fd, I2C_SLAVE, addr);
+    std::cerr << rc << std::endl;
     if (rc < 0) {
         close(_fd);
         _fd = 0;
