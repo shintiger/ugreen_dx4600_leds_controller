@@ -5,6 +5,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <fcntl.h>
+#include <cerrno>
 
 #include "i2c.h"
 
@@ -15,6 +16,7 @@ i2c_device_t::~i2c_device_t() {
 
 int i2c_device_t::start(const char *filename, uint16_t addr) {
     _fd = open(filename, O_RDWR);
+    std::cerr << errno << std::endl;
     std::cerr << _fd << std::endl;
     if (_fd < 0) {
         int rc = _fd;
