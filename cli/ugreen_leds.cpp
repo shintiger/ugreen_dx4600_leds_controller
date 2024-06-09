@@ -20,7 +20,9 @@ int ugreen_leds_t::start() {
 
             if (line.rfind("SMBus I801 adapter", 0) == 0) {
                 const auto i2c_dev = "/dev/" + entry.path().filename().string();
-                return _i2c.start(i2c_dev.c_str(), UGREEN_LED_I2C_ADDR);
+                int res = _i2c.start(i2c_dev.c_str(), UGREEN_LED_I2C_ADDR);
+                std::cerr << res << std::endl;
+                return res;
             }
         }
     }
