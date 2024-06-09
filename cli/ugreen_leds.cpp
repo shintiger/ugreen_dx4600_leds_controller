@@ -10,7 +10,7 @@ int ugreen_leds_t::start() {
     namespace fs = std::filesystem;
 
     if (!fs::exists(I2C_DEV_PATH))
-        return -1;
+        return -3;
 
     for (const auto& entry : fs::directory_iterator(I2C_DEV_PATH)) {
         if (entry.is_directory()) {
@@ -25,7 +25,7 @@ int ugreen_leds_t::start() {
         }
     }
 
-    return -1;
+    return -4;
 }
 
 static int compute_checksum(const std::vector<uint8_t>& data, int size) {

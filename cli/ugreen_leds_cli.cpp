@@ -139,7 +139,9 @@ int main(int argc, char *argv[])
     }
 
     ugreen_leds_t leds_controller;
-    if (leds_controller.start() != 0) {
+    int res = leds_controller.start();
+    if (res != 0) {
+        std::cerr << res << std::endl;
         std::cerr << "Err: fail to open the I2C device." << std::endl;
         std::cerr << "Please check that (1) you have the root permission; " << std::endl;
         std::cerr << "              and (2) the i2c-dev module is loaded. " << std::endl;
