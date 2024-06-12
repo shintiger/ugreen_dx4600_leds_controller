@@ -53,6 +53,25 @@ while read line; do
     fi
 done <<< "$(zpool status -L | grep -E '^\s+sd[a-h][0-9]')"
 
+# Check status of zpool io
+echo "Checking zpool io..."
+while read line; do
+    DEV=($line)
+    partition=${DEV[0]}
+    write=${DEV[3]}
+    read=${DEV[4]}
+    echo "Processing $partition with w/r: $write/$read"
+    if [[ -n "${hwmap[$partition]}" ]]; then
+        index=$((${hwmap[$partition]} + 2))
+        echo "Device $partition maps to index $index"
+        if [ $write != "0" ]; then
+            devices[$index]=w
+        fi
+    else
+        echo "Warning: No mapping found for $partition"
+    fi
+done <<< "$(zpool iostat -L -v | grep -E '^\s+sd[a-h][0-9]')"
+
 # Output the final device statuses
 echo "Final device statuses:"
 
@@ -70,7 +89,10 @@ while true; do
                 "$SCRIPTPATH/ugreen_leds_cli" ${map[$i]} -color 0 255 0 -on -brightness 64
                 ;;
             f)
-                "$SCRIPTPATH/ugreen_leds_cli" ${map[$i]} -color 255 0 0 -blink 100 200 -brightness 64
+                "$SCRIPTPATH/ugreen_leds_cli" ${map[$i]} -color 255 0 0 -blink 400 600 -brightness 64
+                ;;
+            w)
+                "$SCRIPTPATH/ugreen_leds_cli" ${map[$i]} -color 0 0 255 -blink 50 50 -brightness 50
                 ;;
             *)
                 "$SCRIPTPATH/ugreen_leds_cli" ${map[$i]} -off
