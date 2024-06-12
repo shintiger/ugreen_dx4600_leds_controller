@@ -34,48 +34,50 @@ for key in "${!hwmap[@]}"; do
     echo "$key: ${hwmap[$key]}"
 done
 
-# Check status of zpool disks
-echo "Checking zpool status..."
-while read line; do
-    DEV=($line)
-    partition=${DEV[0]}
-    echo "Processing $partition with status ${DEV[1]}"
-    if [[ -n "${hwmap[$partition]}" ]]; then
-        index=$((${hwmap[$partition]} + 2))
-        echo "Device $partition maps to index $index"
-        if [ ${DEV[1]} = "ONLINE" ]; then
-            devices[$index]=o
-        else
-            devices[$index]=f
-        fi
-    else
-        echo "Warning: No mapping found for $partition"
-    fi
-done <<< "$(zpool status -L | grep -E '^\s+sd[a-h][0-9]')"
-
-# Check status of zpool io
-echo "Checking zpool io..."
-while read line; do
-    DEV=($line)
-    partition=${DEV[0]}
-    write=${DEV[3]}
-    read=${DEV[4]}
-    echo "Processing $partition with w/r: $write/$read"
-    if [[ -n "${hwmap[$partition]}" ]]; then
-        index=$((${hwmap[$partition]} + 2))
-        echo "Device $partition maps to index $index"
-        if [ $write != "0" ]; then
-            devices[$index]=w
-        fi
-    else
-        echo "Warning: No mapping found for $partition"
-    fi
-done <<< "$(zpool iostat -L -v | grep -E '^\s+sd[a-h][0-9]')"
-
-# Output the final device statuses
-echo "Final device statuses:"
-
 while true; do
+
+    # Check status of zpool disks
+    echo "Checking zpool status..."
+    while read line; do
+        DEV=($line)
+        partition=${DEV[0]}
+        echo "Processing $partition with status ${DEV[1]}"
+        if [[ -n "${hwmap[$partition]}" ]]; then
+            index=$((${hwmap[$partition]} + 2))
+            echo "Device $partition maps to index $index"
+            if [ ${DEV[1]} = "ONLINE" ]; then
+                devices[$index]=o
+            else
+                devices[$index]=f
+            fi
+        else
+            echo "Warning: No mapping found for $partition"
+        fi
+    done <<< "$(zpool status -L | grep -E '^\s+sd[a-h][0-9]')"
+
+    # Check status of zpool io
+    echo "Checking zpool io..."
+    while read line; do
+        DEV=($line)
+        partition=${DEV[0]}
+        write=${DEV[3]}
+        read=${DEV[4]}
+        echo "Processing $partition with w/r: $write/$read"
+        if [[ -n "${hwmap[$partition]}" ]]; then
+            index=$((${hwmap[$partition]} + 2))
+            echo "Device $partition maps to index $index"
+            if [ $write != "0" ]; then
+                devices[$index]=w
+            fi
+        else
+            echo "Warning: No mapping found for $partition"
+        fi
+    done <<< "$(zpool iostat -L -v | grep -E '^\s+sd[a-h][0-9]')"
+
+    # Output the final device statuses
+    echo "Final device statuses:"
+
+
     for i in "${!devices[@]}"; do
         echo "$i: ${devices[$i]}"
         case "${devices[$i]}" in
