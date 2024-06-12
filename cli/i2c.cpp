@@ -27,7 +27,7 @@ int i2c_device_t::start(const char *filename, uint16_t addr) {
     int rc = ioctl(_fd, I2C_SLAVE, addr);
     int err = errno;
     std::cerr << filename << std::endl;
-    std::cerr << strerror(err) << std::endl;
+    // std::cerr << strerror(err) << std::endl;
     std::cerr << EBADF << std::endl;
     std::cerr << EFAULT << std::endl;
     std::cerr << EINVAL << std::endl;
