@@ -66,7 +66,7 @@ while true; do
         if [[ -n "${hwmap[$partition]}" ]]; then
             index=$((${hwmap[$partition]} + 2))
             echo "Device $partition maps to index $index"
-            if [ $write != "0" ]; then
+            if [ $write != "0" ] || [ $read != "0" ]; then
                 devices[$index]=w
             fi
         else
