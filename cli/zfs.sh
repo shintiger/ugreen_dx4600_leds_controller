@@ -93,7 +93,7 @@ while true; do
                 "$SCRIPTPATH/ugreen_leds_cli" ${map[$i]} -color 255 0 0 -blink 400 600 -brightness 64
                 ;;
             w)
-                "$SCRIPTPATH/ugreen_leds_cli" ${map[$i]} -color 0 0 255 -blink 50 50 -brightness 50
+                "$SCRIPTPATH/ugreen_leds_cli" ${map[$i]} -color 0 255 0 -blink 50 50 -brightness 50
                 ;;
             *)
                 "$SCRIPTPATH/ugreen_leds_cli" ${map[$i]} -off
