@@ -72,11 +72,10 @@ while true; do
         else
             echo "Warning: No mapping found for $partition"
         fi
-    done <<< "$(zpool iostat -L -v | grep -E '^\s+sd[a-h][0-9]')"
+    done <<< "$(zpool iostat -vyL | grep -E '^\s+sd[a-h][0-9]')"
 
     # Output the final device statuses
     echo "Final device statuses:"
-
 
     for i in "${!devices[@]}"; do
         echo "$i: ${devices[$i]}"
